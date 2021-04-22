@@ -3,16 +3,10 @@ package kr.ac.jejunu.userdao;
 import java.sql.*;
 
 public class UserDao {
-
-
-
     public User get(Integer id) throws ClassNotFoundException, SQLException {
         //data 어딨지?
         //mysql driver 로딩
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        //Connection 맺기
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/portalService?serverTimezone=UTC"
-                , "root", "Rkdalsdk798!");
+        Connection connection = getConnection();
         //query 만들고
         PreparedStatement preparedStatement =
                 connection.prepareStatement("select * from portal where id = ?");
@@ -33,5 +27,35 @@ public class UserDao {
         return user;
     }
 
+    public void insert(User user) throws ClassNotFoundException, SQLException {
+        //data 어딨지?
+        //mysql driver 로딩
+        Connection connection = getConnection();
+        //query 만들고
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("insert into portal(name,password) value (?,?)",Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getPassword());
+        preparedStatement.executeUpdate();
+        // query 실행하고
+        ResultSet resultSet = preparedStatement.getGeneratedKeys();
+        resultSet.next();
+
+        user.setId(resultSet.getInt(1));
+        //결과를 User 잘 매핑하고
+
+        //자원을 해지하고
+        resultSet.close();
+        preparedStatement.close();
+        connection.close();
+        //결과를 리턴
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        //Connection 맺기
+        return DriverManager.getConnection("jdbc:mysql://localhost/portalService?serverTimezone=UTC"
+                , "root", "Rkdalsdk798!");
+    }
 
 }
