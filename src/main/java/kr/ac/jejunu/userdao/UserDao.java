@@ -1,37 +1,59 @@
 package kr.ac.jejunu.userdao;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class UserDao {
-    private final JdbcContext jdbcContext;
+    private final JdbcTemplate jdbcTemplate;
 
-    public UserDao(JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
+    public UserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public User get(Integer id) throws ClassNotFoundException, SQLException {
-        Object[] parms = new Object[]{id};
+    public User get(Integer id) throws SQLException {
+        Object[] params = new Object[]{id};
         String sql = "select * from portal where id = ?";
-        return jdbcContext.get(sql, parms);
+        return jdbcTemplate.query(sql, params, rs -> {
+            User user = null;
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setPassword(rs.getString("password"));
+            }
+            return user;
+        });
     }
 
     public void insert(User user) throws ClassNotFoundException, SQLException {
-        Object[] parms = new Object[]{user.getName(), user.getPassword()};
+        Object[] params = new Object[]{user.getName(), user.getPassword()};
         String sql = "insert into portal(name,password) value (?,?)";
-
-        jdbcContext.insert(user, parms, sql);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+            }
+            return preparedStatement;
+        }, keyHolder);
+        user.setId(keyHolder.getKey().intValue());
     }
 
     public void update(User user) throws SQLException {
-        Object[] parms = new Object[]{user.getName(), user.getPassword(), user.getId()};
+        Object[] params = new Object[]{user.getName(), user.getPassword(), user.getId()};
         String sql = "update portal set name = ?, password = ? where id =?";
-        jdbcContext.update(sql, parms);
+        jdbcTemplate.update(sql, params);
     }
 
     public void delete(Integer id) throws SQLException {
-        Object[] parms = new Object[]{id};
+        Object[] params = new Object[]{id};
         String sql = "delete from portal where id =?";
-        jdbcContext.update(sql, parms);
+        jdbcTemplate.update(sql, params);
     }
 
 }

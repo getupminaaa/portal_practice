@@ -96,7 +96,7 @@ public class JdbcContext {
         }
     }
 
-    
+
     User get(String sql, Object[] parms) throws SQLException {
         StatementStrategy statementStrategy = connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
