@@ -11,21 +11,21 @@ public class UserDao {
     }
 
     public User get(Integer id) throws ClassNotFoundException, SQLException {
-
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet= null;
-        User user;
+        ResultSet resultSet = null;
+        User user = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("select * from portal where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new GetStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(id,connection);
             resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            user = new User();
-            user.setId(resultSet.getInt("id"));
-            user.setName(resultSet.getString("name"));
-            user.setPassword(resultSet.getString("password"));
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setName(resultSet.getString("name"));
+                user.setPassword(resultSet.getString("password"));
+            }
         } finally {
             try {
                 resultSet.close();
@@ -47,15 +47,15 @@ public class UserDao {
     }
 
     public void insert(User user) throws ClassNotFoundException, SQLException {
-
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("insert into portal(name,password) value (?,?)", Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
+
+            StatementStrategy statementStrategy = new InserteStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(user,connection);
+            
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -82,13 +82,11 @@ public class UserDao {
     public void update(User user) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+
         try {
             connection = dataSource.getConnection();
-
-            preparedStatement = connection.prepareStatement("update portal set name = ?, password = ? where id =?");
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3,user.getId());
+            StatementStrategy statementStrategy = new UpdateStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(user,connection);
             preparedStatement.executeUpdate();
         } finally {
             try {
@@ -110,10 +108,10 @@ public class UserDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
-
-            preparedStatement = connection.prepareStatement("delete from portal where id =?");
-            preparedStatement.setInt(1, id);
+            StatementStrategy statementStrategy = new DeleteStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(id, connection);
             preparedStatement.executeUpdate();
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
