@@ -1,8 +1,6 @@
 package kr.ac.jejunu.userdao;
 
-import javax.sql.DataSource;
-import javax.xml.crypto.Data;
-import java.sql.*;
+import java.sql.SQLException;
 
 public class UserDao {
     private final JdbcContext jdbcContext;
@@ -29,19 +27,6 @@ public class UserDao {
 
     public void delete(Integer id) throws SQLException {
         StatementStrategy statementStrategy = new DeleteStatementStrategy(id);
-        jdbcContext.jdbcConetextForUpdate(statementStrategy);
-    }
-
-
-    private User jdbcContextForGet(StatementStrategy statementStrategy) throws SQLException {
-        return jdbcContext.jdbcContextForGet(statementStrategy);
-    }
-
-    private void jdbcConetextForInsert(User user, StatementStrategy statementStrategy) throws SQLException {
-        jdbcContext.jdbcConetextForInsert(user, statementStrategy);
-    }
-
-    private void jdbcConetextForUpdate(StatementStrategy statementStrategy) throws SQLException {
         jdbcContext.jdbcConetextForUpdate(statementStrategy);
     }
 }
