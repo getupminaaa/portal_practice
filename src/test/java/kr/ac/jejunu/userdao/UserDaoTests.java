@@ -1,7 +1,10 @@
 package kr.ac.jejunu.userdao;
 
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.SQLException;
 
@@ -12,32 +15,39 @@ import static org.hamcrest.core.Is.is;
 public class UserDaoTests {
     String name = "hulk";
     String password = "1234";
+
+    private static UserDao userDao;
+
+    @BeforeAll
+    public static void serUp() {
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(DaoFactory.class);
+        userDao = applicationContext.getBean("userDao", UserDao.class); //Dependency LookUp
+    }
+
+
     @Test
     public void testGet() throws SQLException, ClassNotFoundException {
         Integer id = 1;
 
-        DaoFactory daoFactory = new DaoFactory();
-        UserDao userDao =daoFactory.getUserDao();
         User user = userDao.get(id);
         assertThat(user.getId(), is(id));
         assertThat(user.getName(), is(name));
         assertThat(user.getPassword(), is(password));
     }
+
     @Test
     public void testInsert() throws SQLException, ClassNotFoundException {
         User user = new User();
         user.setName(name);
         user.setPassword(password);
 
-        DaoFactory daoFactory = new DaoFactory();
-        UserDao userDao =daoFactory.getUserDao();
 
         userDao.insert(user);
 
         User insertedUser = userDao.get(user.getId());
 
-        assertThat(user.getId(),greaterThan(0));
-        assertThat(insertedUser.getName(),is(user.getName()));
+        assertThat(user.getId(), greaterThan(0));
+        assertThat(insertedUser.getName(), is(user.getName()));
         assertThat(insertedUser.getPassword(), is(user.getPassword()));
     }/*
     @Test
