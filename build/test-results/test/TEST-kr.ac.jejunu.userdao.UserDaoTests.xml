@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="kr.ac.jejunu.userdao.UserDaoTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-04-22T04:10:14" hostname="gangmin-aui-MacBookPro.local" time="0.446">
+<testsuite name="kr.ac.jejunu.userdao.UserDaoTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2021-04-22T04:23:35" hostname="gangmin-aui-MacBookPro.local" time="0.549">
   <properties/>
-  <testcase name="testGet()" classname="kr.ac.jejunu.userdao.UserDaoTests" time="0.352"/>
-  <testcase name="testInsert()" classname="kr.ac.jejunu.userdao.UserDaoTests" time="0.093"/>
+  <testcase name="testGetHalla()" classname="kr.ac.jejunu.userdao.UserDaoTests" time="0.366"/>
+  <testcase name="testGet()" classname="kr.ac.jejunu.userdao.UserDaoTests" time="0.035"/>
+  <testcase name="testInsertHalla()" classname="kr.ac.jejunu.userdao.UserDaoTests" time="0.08"/>
+  <testcase name="testInsert()" classname="kr.ac.jejunu.userdao.UserDaoTests" time="0.065"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

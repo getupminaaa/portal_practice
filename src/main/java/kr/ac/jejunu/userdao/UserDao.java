@@ -2,7 +2,7 @@ package kr.ac.jejunu.userdao;
 
 import java.sql.*;
 
-public class UserDao {
+public abstract class UserDao {
     public User get(Integer id) throws ClassNotFoundException, SQLException {
         //data 어딨지?
         //mysql driver 로딩
@@ -51,11 +51,6 @@ public class UserDao {
         //결과를 리턴
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        //Connection 맺기
-        return DriverManager.getConnection("jdbc:mysql://localhost/portalService?serverTimezone=UTC"
-                , "root", "Rkdalsdk798!");
-    }
+    abstract public Connection getConnection() throws ClassNotFoundException, SQLException;
 
 }
