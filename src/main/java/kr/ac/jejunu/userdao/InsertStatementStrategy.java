@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class InserteStatementStrategy implements StatementStrategy {
+public class InsertStatementStrategy implements StatementStrategy {
     @Override
     public PreparedStatement makeStatement(Object object, Connection connection) throws SQLException {
 

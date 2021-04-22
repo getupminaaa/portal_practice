@@ -53,7 +53,7 @@ public class UserDao {
         try {
             connection = dataSource.getConnection();
 
-            StatementStrategy statementStrategy = new InserteStatementStrategy();
+            StatementStrategy statementStrategy = new InsertStatementStrategy();
             preparedStatement = statementStrategy.makeStatement(user,connection);
             
             preparedStatement.executeUpdate();
