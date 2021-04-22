@@ -16,7 +16,8 @@ public class UserDaoTests {
     public void testGet() throws SQLException, ClassNotFoundException {
         Integer id = 1;
 
-        UserDao userDao = new JejuUserDao();
+        ConnectionMaker connectionMaker = new JejuConnectionMaker();
+        UserDao userDao = new UserDao(connectionMaker);
         User user = userDao.get(id);
         assertThat(user.getId(), is(id));
         assertThat(user.getName(), is(name));
@@ -28,7 +29,8 @@ public class UserDaoTests {
         user.setName(name);
         user.setPassword(password);
 
-        UserDao userDao = new JejuUserDao();
+        ConnectionMaker connectionMaker = new JejuConnectionMaker();
+        UserDao userDao = new UserDao(connectionMaker);
         userDao.insert(user);
 
         User insertedUser = userDao.get(user.getId());
@@ -41,7 +43,9 @@ public class UserDaoTests {
     public void testGetHalla() throws SQLException, ClassNotFoundException {
         Integer id = 1;
 
-        UserDao userDao = new HallaUserDao();
+
+        ConnectionMaker connectionMaker = new HallConnectionMaker();
+        UserDao userDao = new UserDao(connectionMaker);
         User user = userDao.get(id);
         assertThat(user.getId(), is(id));
         assertThat(user.getName(), is(name));
@@ -53,10 +57,11 @@ public class UserDaoTests {
         user.setName(name);
         user.setPassword(password);
 
-        UserDao userDao = new HallaUserDao();
+        ConnectionMaker connectionMaker = new HallConnectionMaker();
+        UserDao userDao = new UserDao(connectionMaker);
         userDao.insert(user);
 
-        User insertedUser = userDao.get(user.getId());
+        User insertedUser = userDao.get(user.getId( ));
 
         assertThat(user.getId(),greaterThan(0));
         assertThat(insertedUser.getName(),is(user.getName()));

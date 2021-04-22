@@ -1,2 +1,4 @@
+kr/ac/jejunu/userdao/HallConnectionMaker.java
+ kr.ac.jejunu.userdao.HallConnectionMaker
 kr/ac/jejunu/userdao/UserDaoTests.java
  kr.ac.jejunu.userdao.UserDaoTests

@@ -2,11 +2,17 @@ package kr.ac.jejunu.userdao;
 
 import java.sql.*;
 
-public abstract class UserDao {
+public class UserDao {
+    private final ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
+
     public User get(Integer id) throws ClassNotFoundException, SQLException {
         //data 어딨지?
         //mysql driver 로딩
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
         //query 만들고
         PreparedStatement preparedStatement =
                 connection.prepareStatement("select * from portal where id = ?");
@@ -30,7 +36,7 @@ public abstract class UserDao {
     public void insert(User user) throws ClassNotFoundException, SQLException {
         //data 어딨지?
         //mysql driver 로딩
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
         //query 만들고
         PreparedStatement preparedStatement =
                 connection.prepareStatement("insert into portal(name,password) value (?,?)",Statement.RETURN_GENERATED_KEYS);
@@ -50,7 +56,4 @@ public abstract class UserDao {
         connection.close();
         //결과를 리턴
     }
-
-    abstract public Connection getConnection() throws ClassNotFoundException, SQLException;
-
 }
